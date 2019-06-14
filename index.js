@@ -1,8 +1,7 @@
 const season = require('./season.json')
 
-console.log('season ', season)
+// console.log('season ', season)
 
-const played = []
 const rankings = []
 const teams = {}
 
@@ -12,8 +11,8 @@ const run = () => {
         round.matches.forEach(match => {
             // console.log('match ', match)
             // console.log('teams ', teams)
-            Object.keys(teams).indexOf(match.team1.code) === -1 ? firstMatch(match, 1) : console.log('other match')
-            Object.keys(teams).indexOf(match.team2.code) === -1 ? firstMatch(match, 2) : console.log('other match')
+            Object.keys(teams).indexOf(match.team1.code) === -1 ? firstMatch(match, 1) : otherMatch(match, 1)
+            Object.keys(teams).indexOf(match.team2.code) === -1 ? firstMatch(match, 2) : otherMatch(match, 2)
         })
     })
 }
@@ -41,6 +40,33 @@ const firstMatch = (match, pos) => {
     teams[teamCode] = team
     // console.log('teams ', teams)
     // console.log('teams ', Object.keys(teams).length)
+}
+
+const otherMatch = (match, pos) => {
+    let teamCode = match[`team${pos}`].code
+    let invertedPos = pos === 1 ? 2 : 1
+    let team = teams[teamCode]    
+    let { wins, draws, losses, goalsFor, goalsAgainst, points, teamName } = team
+    wins += match[`score${pos}`] > match[`score${invertedPos}`] ? 1 : 0
+    draws += match[`score${pos}`] === match[`score${invertedPos}`] ? 1 : 0
+    losses += match[`score${pos}`] < match[`score${invertedPos}`] ? 1 : 0
+    goalsFor += match[`score${pos}`]
+    goalsAgainst += match[`score${invertedPos}`]
+    points += calculatePoints(match[`score${pos}`], match[`score${invertedPos}`])
+    let updatedTeam = {
+        teamName,
+        wins,
+        draws,
+        losses,
+        goalsFor,
+        goalsAgainst,
+        points,
+        goalDifference: goalsFor - goalsAgainst,
+    }
+    console.log('team before update ', team)
+    console.log('match ', match)
+    console.log('team after update ', updatedTeam)
+    teams[teamCode] = updatedTeam
 }
 
 const calculatePoints = (score1, score2) => {
