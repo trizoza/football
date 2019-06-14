@@ -15,6 +15,10 @@ const run = () => {
             Object.keys(teams).indexOf(match.team2.code) === -1 ? firstMatch(match, 2) : otherMatch(match, 2)
         })
     })
+
+    sortTeams(teams)
+
+    console.log('rankings ', rankings)
 }
 
 const firstMatch = (match, pos) => {
@@ -63,9 +67,9 @@ const otherMatch = (match, pos) => {
         points,
         goalDifference: goalsFor - goalsAgainst,
     }
-    console.log('team before update ', team)
-    console.log('match ', match)
-    console.log('team after update ', updatedTeam)
+    // console.log('team before update ', team)
+    // console.log('match ', match)
+    // console.log('team after update ', updatedTeam)
     teams[teamCode] = updatedTeam
 }
 
@@ -77,6 +81,24 @@ const calculatePoints = (score1, score2) => {
     } else {
         return 1
     }
+}
+
+const sortTeams = (teams) => {
+    let teamsArray = Object.keys(teams).map(teamCode => teams[teamCode])
+    console.log('teamsArray ', teamsArray)
+    teamsArray.sort((team1, team2) => {
+
+        if (team1.points > team2.points) return -1;
+        if (team1.points < team2.points) return 1;
+    
+        if (team1.goalDifference > team2.goalDifference) return -1;
+        if (team1.goalDifference < team2.goalDifference) return 1;
+        
+        if (team1.goalsFor > team2.goalsFor) return -1;
+        if (team1.goalsFor < team2.goalsFor) return 1;
+    })
+
+    console.log('teamsArray sorted ', teamsArray);
 }
 
 
