@@ -2,7 +2,6 @@ const season = require('./season.json')
 
 // console.log('season ', season)
 
-const rankings = []
 const teams = {}
 
 const run = () => {
@@ -16,7 +15,7 @@ const run = () => {
         })
     })
 
-    sortTeams(teams)
+    const rankings = sortTeams(teams)
 
     console.log('rankings ', rankings)
 }
@@ -99,9 +98,12 @@ const sortTeams = (teams) => {
     })
 
     console.log('teamsArray sorted ', teamsArray);
+
+    return teamsArray.map((team, index) => {
+        team.rank = index + 1
+        return team
+    })
 }
 
 
 run()
-
-console.log('rankings ', rankings);
